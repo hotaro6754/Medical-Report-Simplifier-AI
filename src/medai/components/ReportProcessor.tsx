@@ -20,6 +20,7 @@ import { DietaryAdviceCard } from './dashboard/DietaryAdviceCard';
 import { VoiceControls } from './VoiceControls';
 import { AuthModal } from './AuthModal';
 import { useAuth } from './AuthContext';
+import { ChatFlow } from './ChatFlow';
 
 export function ReportProcessor() {
     const { t } = useLanguage();
@@ -221,6 +222,11 @@ export function ReportProcessor() {
                         </div>
                     </div>
                 )}
+
+                {/* AI Copilot Chat */}
+                <div className="pt-10 border-t border-white/5">
+                    <ChatFlow report={report} />
+                </div>
 
                 <Button
                     onClick={() => setReport(null)}
