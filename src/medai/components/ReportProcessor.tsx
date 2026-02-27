@@ -50,19 +50,14 @@ export function ReportProcessor() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Reset file input so same file can be re-uploaded
+        if (fileInputRef.current) fileInputRef.current.value = '';
+
         const formData = new FormData();
         formData.append('file', file);
         if (voicePrompt) formData.append('symptoms', voicePrompt);
 
-        // Always run analysis — auth is only needed to SAVE the report
-        // After analysis completes, if user not logged in, show auth modal to save
-        pendingFormDataRef.current = formData;
         await runAnalysis(formData);
-
-        // After results are shown, prompt login if not authenticated
-        if (!user) {
-            setShowAuthModal(true);
-        }
     };
 
     if (loading) {
@@ -254,7 +249,7 @@ export function ReportProcessor() {
                         type="file"
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
                         onChange={handleFileUpload}
-                        accept="image/*,application/pdf"
+                        accept="image/*,application/pdf,text/plain,.txt"
                         suppressHydrationWarning
                     />
                     <div className="w-28 h-28 bg-white/5 rounded-full flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-700 border border-white/10 shadow-2xl relative">

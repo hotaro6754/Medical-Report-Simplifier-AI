@@ -80,19 +80,21 @@ export default function HomePage() {
             {t('heroSubtitle')}
           </p>
           <div className="flex gap-4 justify-center">
-            <Button size="lg" className={`group h-16 px-10 text-lg font-black rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-xl ${isDark
-              ? 'bg-white text-black hover:bg-blue-50 shadow-white/10'
-              : 'bg-slate-900 text-white hover:bg-blue-900 shadow-slate-900/20'
-              }`}>
+            <Button
+              size="lg"
+              onClick={() => document.getElementById('analysis')?.scrollIntoView({ behavior: 'smooth' })}
+              className="group h-16 px-10 text-lg font-black rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-xl bg-blue-600 text-white hover:bg-blue-700 shadow-blue-600/30"
+            >
               {t('analyzeBtn')}
               <motion.span
                 className="ml-2 inline-flex"
                 whileHover={{ scale: 1.4, rotate: [0, -15, 15, -10, 0], transition: { duration: 0.5, ease: 'easeInOut' } }}
               >
-                <Zap className={`w-5 h-5 fill-current ${isDark ? 'text-yellow-400' : 'text-yellow-500'}`} />
+                <Zap className="w-5 h-5 fill-current text-yellow-400" />
               </motion.span>
             </Button>
           </div>
+
         </motion.div>
 
         <motion.div
