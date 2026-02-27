@@ -3,10 +3,10 @@
 // bundling server-only packages into client/action browser bundles.
 export async function createAI() {
   const { genkit } = await import('genkit');
-  const { googleAI } = await import('@genkit-ai/google-genai');
+  const { googleAI } = await import('@genkit-ai/googleai');
 
   return genkit({
-    plugins: [googleAI()],
-    model: 'googleai/gemini-2.5-flash',
+    plugins: [googleAI({ apiKey: process.env.GEMINI_API_KEY })],
+    model: 'googleai/gemini-1.5-flash',
   });
 }
