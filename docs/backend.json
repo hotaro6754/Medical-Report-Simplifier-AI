@@ -1,0 +1,85 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the Sanchaari application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user.",
+          "format": "uuid"
+        },
+        "username": {
+          "type": "string",
+          "description": "The username chosen by the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user.",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The user's first name."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The user's last name."
+        },
+        "profilePicture": {
+          "type": "string",
+          "description": "URL of the user's profile picture.",
+          "format": "uri"
+        },
+        "dateJoined": {
+          "type": "string",
+          "description": "The date and time the user joined the application.",
+          "format": "date-time"
+        },
+        "lastLogin": {
+          "type": "string",
+          "description": "The date and time the user last logged in.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "email",
+        "firstName",
+        "lastName",
+        "dateJoined"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous",
+      "google.com"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile information. Uses path-based ownership for simple security rules based on user ID.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore data structure is designed to support the Sanchaari application, focusing on user management and personalized travel planning. The primary collection is `/users/{userId}`, which stores user profile information as defined in the `User` entity. This structure prioritizes path-based ownership for user data, ensuring clear and efficient security rules. Each user document is stored directly under their `userId`, allowing for straightforward data retrieval and security implementation. This eliminates the need for complex queries or database calls to verify user ownership.\n\nThis design emphasizes Authorization Independence by avoiding hierarchical authorization dependencies.  Access control is primarily based on the authenticated user's `uid` matching the `userId` in the path, eliminating the need for `get()` calls in security rules. This simplifies rule creation and enhances the atomicity of operations.\n\nThe structure also supports the required QAPs (Rules are not Filters).  The path-based ownership model enables secure `list` operations, as rules can efficiently filter data based on the `userId` in the path. Because user data is stored directly under the `/users/{userId}` collection, listing operations for a specific user's data are inherently secure and performant, without requiring additional filtering logic within the rules themselves."
+  }
+}

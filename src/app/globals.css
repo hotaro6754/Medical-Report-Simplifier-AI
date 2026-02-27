@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 224 71% 4%;
+    --foreground: 210 20% 98%;
+    --card: 224 71% 8%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71% 8%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 210 15% 15%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 210 15% 18%;
+    --muted-foreground: 210 20% 65%;
+    --accent: 162 72% 48%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 210 15% 20%;
+    --input: 210 15% 20%;
+    --ring: 221 83% 53%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border) / 0.1);
+  }
+
+  /* Default dark body */
+  body {
+    color: hsl(var(--foreground));
+    background-color: #020617;
+    /* obsidian / slate-950 */
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Clinical Light Mode body */
+  .light body {
+    background-color: #F8FAFC;
+    /* clinical white / slate-50 */
+    color: #0F172A;
+    /* deep slate for max readability */
+  }
+
+  /* ── Light mode text visibility patches ──────────────────────── */
+  /* Text that is hardcoded white needs to become dark slate in light mode */
+  .light .text-white {
+    color: #0F172A !important;
+  }
+
+  /* Nav items in light mode */
+  .light .text-slate-600,
+  .light .dark\:text-slate-500 {
+    color: #475569;
+  }
+
+  /* Cards and glass panels in light mode */
+  .light .bg-slate-900\/40,
+  .light .bg-slate-950\/40,
+  .light .bg-white\/5 {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(0,0,0,0.08) !important;
+  }
+
+  /* Description text in light mode */
+  .light .text-slate-400 {
+    color: #475569;
+  }
+
+  .light .text-slate-500 {
+    color: #64748b;
+  }
+
+  /* Ensure blue labels and icons remain blue */
+  .light .text-blue-400 {
+    color: #2563eb;
+  }
+
+  .light .text-blue-300 {
+    color: #3b82f6;
+  }
+
+  /* Upload card drop zone border */
+  .light .border-white\/10 {
+    border-color: rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Story slide text in light mode */
+  .light .dark\:from-white {
+    --tw-gradient-from: #0F172A;
+  }
+
+  .light .dark\:to-slate-400 {
+    --tw-gradient-to: #475569;
+  }
+}
