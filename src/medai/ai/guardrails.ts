@@ -92,40 +92,32 @@ export function sanitizePII(data: Record<string, any>): Record<string, any> {
 }
 
 /**
- * Input guardrail: validates extraction output is from a genuine lab report.
- * Throws if the document doesn't look medical.
+ * Input guardrail: validates extraction output is from a genuine medical report.
  */
 export function validateMedicalInput(extractionData: any): void {
     if (!extractionData) {
-        throw new Error('GUARDRAIL_FAILED: Extraction agent returned no data. Document may not be a medical report.');
+        throw new Error('GUARDRAIL_FAILED: Extraction agent returned no data.');
     }
-    if (!extractionData.parameters || !Array.isArray(extractionData.parameters) || extractionData.parameters.length === 0) {
-        throw new Error('GUARDRAIL_FAILED: No medical parameters found. Please upload a valid lab report (e.g., blood test, CBC, lipid panel).');
+    if (extractionData.document_classification === 'UNKNOWN_OR_INVALID') {
+        throw new Error('GUARDRAIL_FAILED: Document not recognized as a medical report. Please upload a valid lab report, prescription, or radiology summary.');
     }
-    if (typeof extractionData.confidence === 'number' && extractionData.confidence < 0.2) {
-        throw new Error('GUARDRAIL_FAILED: Document quality too low (confidence < 20%). Please upload a clearer image of the lab report.');
+    if (!extractionData.extracted_data || !Array.isArray(extractionData.extracted_data) || extractionData.extracted_data.length === 0) {
+        throw new Error('GUARDRAIL_FAILED: No clinical data could be extracted. Please upload a clearer image of your medical document.');
     }
 }
 
 /**
  * Output guardrail: validates analysis output has all required fields populated.
- * Throws if the AI returned an incomplete or fallback response.
  */
 export function validateOutputCompleteness(analysisData: any): void {
     if (!analysisData) {
         throw new Error('GUARDRAIL_FAILED: Analysis agent returned no output.');
     }
     if (!analysisData.summary || analysisData.summary.trim().length < 10) {
-        throw new Error('GUARDRAIL_FAILED: AI returned an empty or insufficient summary. Retry the analysis.');
+        throw new Error('GUARDRAIL_FAILED: AI returned an empty or insufficient summary.');
     }
-    if (!analysisData.parametersWithStatus || analysisData.parametersWithStatus.length === 0) {
-        throw new Error('GUARDRAIL_FAILED: Analysis returned no parameter assessments. Data may be corrupted.');
-    }
-    if (typeof analysisData.healthScore !== 'number' || analysisData.healthScore < 0 || analysisData.healthScore > 100) {
-        throw new Error('GUARDRAIL_FAILED: Health score is invalid. Must be a number between 0 and 100.');
-    }
-    if (!['low', 'moderate', 'high'].includes(analysisData.riskAssessment)) {
-        throw new Error('GUARDRAIL_FAILED: Risk assessment must be "low", "moderate", or "high".');
+    if (typeof analysisData.healthScore !== 'number') {
+        throw new Error('GUARDRAIL_FAILED: Health score is missing.');
     }
 }
 

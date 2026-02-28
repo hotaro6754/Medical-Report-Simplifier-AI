@@ -1,19 +1,23 @@
-# MedExplain AI: Agentic Superpowers ⚡
+# Swasthya AI: Agentic Superpowers ⚡
 
-I have been upgraded with specific skills from the Antigravity and Gemini Superpowers ecosystems. I will apply these patterns to all work in this project.
+This document outlines the core agentic capabilities of Swasthya AI, serving as a guide for future development and scaling.
 
-## 1. Turbo Orchestration (Parallel Spawning)
-- When a task has independent sub-tasks (e.g., generating explanations in multiple languages or fetching citations from multiple sources), I will use `Promise.all` in the code.
-- This results in ~40-60% faster processing for the user.
+## 1. Clinical Intake & Triage Vision Agent
+- **Logic:** `src/medai/ai/extraction-agent.ts`
+- **Capabilities:**
+    - Document Classification: LAB_REPORT, CLINICAL_PRESCRIPTION, etc.
+    - OCR-based Data Extraction.
+    - Triage logic for identifying critical medical values.
 
-## 2. Interface-First Planning
-- I prioritize defining strict Zod schemas and data contracts before implementing logic.
-- My prompts emphasize precision for Gemini Vision to prevent "AI Hallucinations" in medical data.
+## 2. Advanced Clinical & Pharmacological Diagnostics Copilot
+- **Logic:** `src/medai/ai/analysis-agent.ts`
+- **Capabilities:**
+    - Pathology breakdown (ICD-10, cellular pathophysiology).
+    - Pharmacological mapping (Drug classes, mechanisms of action).
+    - Literature correlation (Simulated PubMed/Bio_ClinicalBERT retrieval).
 
-## 3. High-Fidelity UI/UX (Pro-Max)
-- I utilize **Glassmorphism** (blurred translucent layers) and **Medical Gradients** (Soft whites/blues).
-- I use `framer-motion` for all state transitions to create search/loading "wow" moments.
-- I prioritize **Indic Typography** legibility for rural accessibility.
-
-## 4. Context-Proxy (Knowledge Vault)
-- I maintain a central "single source of truth" for user data (like the medical report context) and pass it reliably between specialized agents.
+## 3. Multilingual Audio & Translation Layer
+- **Logic:** `src/medai/ai/sarvam-actions.ts`, `src/medai/components/LanguageContext.tsx`
+- **Capabilities:**
+    - 7 Target Languages: English, Hindi, Telugu, Kannada, Malayalam, Tamil, Marathi.
+    - Sarvam AI STT & TTS integration.

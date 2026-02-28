@@ -1,10 +1,10 @@
-# 🩺 MedExplain AI — Healthcare Intelligence for Bharat
+# 🩺 Swasthya AI — Healthcare Intelligence for Bharat
 
 <p align="center">
-  <img src="https://via.placeholder.com/200x200/4F46E5/FFFFFF?text=MedExplain" alt="MedExplain AI Logo" width="200"/>
+  <img src="https://via.placeholder.com/200x200/4F46E5/FFFFFF?text=Swasthya" alt="Swasthya AI Logo" width="200"/>
 </p>
 
-<h1 align="center">MedExplain AI</h1>
+<h1 align="center">Swasthya AI</h1>
 
 <p align="center">
   <strong>🧠 AI-Powered Medical Report Simplification + 🏥 Smart Care Locator</strong>
@@ -18,13 +18,13 @@
 
 <div align="center">
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/medexplain-ai/medexplain)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/swasthya-ai/swasthya)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-orange.svg)](https://github.com/medexplain-ai/medexplain/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-orange.svg)](https://github.com/swasthya-ai/swasthya/releases)
 [![React](https://img.shields.io/badge/frontend-React.js-61DAFB.svg)](https://reactjs.org/)
 [![Flask](https://img.shields.io/badge/backend-Flask-000000.svg)](https://flask.palletsprojects.com/)
 [![Hackathon](https://img.shields.io/badge/hackathon-Grand%20Finalist-purple.svg)](https://hackathon.example.com)
-[![Status](https://img.shields.io/badge/status-Production%20Ready-success.svg)](https://medexplain.ai)
+[![Status](https://img.shields.io/badge/status-Production%20Ready-success.svg)](https://swasthya.ai)
 
 </div>
 
@@ -63,7 +63,7 @@ Your mom gets a blood test. The report has 30+ numbers, weird words like "eosino
 
 **This happens to 1.3 billion Indians. Every day.**
 
-**MedExplain AI fixes this.**
+**Swasthya AI fixes this.**
 
 📱 **Upload a photo** of any medical report  
 🧠 **Our AI reads it** and understands the context  

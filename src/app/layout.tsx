@@ -11,6 +11,14 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Swasthya AI – Healthcare Intelligence for Bharat",
   description: "Simplifying complex lab reports into plain regional languages with scientific accuracy and empathy. Transforming rural healthcare.",
+  manifest: "/manifest.json",
+  themeColor: "#2563eb",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Swasthya AI",
+  },
 };
 
 export default function RootLayout({

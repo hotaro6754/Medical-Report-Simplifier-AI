@@ -24,6 +24,13 @@ export interface Citation {
     description: string;
 }
 
+export interface DrugMapping {
+    drugClassName: string;
+    commonGenerics: string[];
+    mechanismOfAction: string;
+    clinicalIndication: string;
+}
+
 export interface MedicalReport {
     id: string;
     userId: string;
@@ -33,6 +40,7 @@ export interface MedicalReport {
     confidence: number;
     parameters: MedicalParameter[];
     summary: string;
+    simpleSummary?: string;
     healthScore: number;
     riskAssessment: RiskAssessment;
     dietaryAdvice: string[];
@@ -42,6 +50,22 @@ export interface MedicalReport {
     imageMimeType?: string;
     imageBase64?: string;
     citations?: Citation[];
+
+    // Advanced Diagnostic Fields
+    targetCondition?: string;
+    icd10Code?: string;
+    clinicalDefinition?: string;
+    correlatedBiomarkers?: string[];
+    pharmacologicalMapping?: DrugMapping[];
+    recentClinicalResearch?: string;
+    comorbidities?: string[];
+
+    // Extraction/Triage info
+    classification?: string;
+    patientDemographics?: {
+        age: string | null;
+        gender: string | null;
+    };
 }
 
 export interface Facility {

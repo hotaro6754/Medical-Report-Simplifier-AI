@@ -1,12 +1,12 @@
-# MedExplain AI: Design PRD (Pro-Max Edition) 🎨
+# Swasthya AI: Design PRD (Pro-Max Edition) 🎨
 
-This document defines the high-fidelity design specifications for MedExplain AI, synthesizing intelligence from top-tier design sources like DesignSpells, Minimal Gallery, and Animate-UI.
+This document defines the high-fidelity design specifications for Swasthya AI, synthesizing intelligence from top-tier design sources like DesignSpells, Minimal Gallery, and Animate-UI.
 
 ## 1. Design Philosophy: "Empathetic Authority"
 Our design must balance the **Precision** of medical science with the **Empathy** required for patient care.
 
 ## 2. Inspiration Analysis
-| Source | Key Takeaway | Application in MedExplain |
+| Source | Key Takeaway | Application in Swasthya |
 |:---|:---|:---|
 | **DesignSpells** | Delightful micro-interactions | Scanning beam effect during OCR; pulsing vitals status. |
 | **Minimal Gallery** | Mastery of whitespace/grid | Clean, uncluttered report cards to reduce cognitive load. |
