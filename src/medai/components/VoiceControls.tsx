@@ -48,7 +48,10 @@ export function VoiceControls({
                 body: JSON.stringify({ text, languageCode }),
             });
 
-            if (!response.ok) throw new Error('TTS request failed');
+            if (!response.ok) {
+                const body = await response.json().catch(() => ({}));
+                throw new Error(body.error || `TTS failed (${response.status})`);
+            }
             const { audioBase64 } = await response.json();
 
             const audio = new Audio(`data:audio/wav;base64,${audioBase64}`);
@@ -59,7 +62,12 @@ export function VoiceControls({
             setTtsState('playing');
         } catch (err: any) {
             setTtsState('idle');
-            setError('Voice unavailable');
+            const msg = err.message || '';
+            if (msg.includes('rate limit') || msg.includes('429') || msg.includes('quota')) {
+                setError('API rate limit reached — try again shortly');
+            } else {
+                setError(`Voice error: ${msg.slice(0, 60)}`);
+            }
         }
     };
 
@@ -102,11 +110,23 @@ export function VoiceControls({
                         body: formData,
                     });
 
-                    if (!response.ok) throw new Error('STT request failed');
+                    if (!response.ok) {
+                        const body = await response.json().catch(() => ({}));
+                        throw new Error(body.error || `STT failed (${response.status})`);
+                    }
                     const { transcript } = await response.json();
-                    onTranscript?.(transcript);
-                } catch {
-                    setError('Voice recognition failed. Try again.');
+                    if (transcript) {
+                        onTranscript?.(transcript);
+                    } else {
+                        setError('No speech detected. Please try speaking again.');
+                    }
+                } catch (err: any) {
+                    const msg = err.message || '';
+                    if (msg.includes('rate limit') || msg.includes('429') || msg.includes('quota')) {
+                        setError('API rate limit reached — try again shortly');
+                    } else {
+                        setError(`Voice recognition error: ${msg.slice(0, 60)}`);
+                    }
                 } finally {
                     setSttState('idle');
                 }

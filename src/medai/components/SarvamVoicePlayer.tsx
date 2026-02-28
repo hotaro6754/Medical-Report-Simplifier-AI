@@ -7,10 +7,11 @@ import { generateSarvamVoice } from '../ai/sarvam-actions';
 
 interface SarvamVoicePlayerProps {
     text: string;
-    language?: string;
+    languageCode?: string;
+    languageName?: string;
 }
 
-export function SarvamVoicePlayer({ text, language = 'hi-IN' }: SarvamVoicePlayerProps) {
+export function SarvamVoicePlayer({ text, languageCode = 'hi-IN', languageName = 'Hindi' }: SarvamVoicePlayerProps) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [loading, setLoading] = useState(false);
     const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
@@ -30,7 +31,7 @@ export function SarvamVoicePlayer({ text, language = 'hi-IN' }: SarvamVoicePlaye
 
         setLoading(true);
         try {
-            const result = await generateSarvamVoice(text, language);
+            const result = await generateSarvamVoice(text, languageCode);
 
             if (result.success && result.audio_content) {
                 const audioSrc = `data:audio/wav;base64,${result.audio_content}`;
@@ -65,7 +66,7 @@ export function SarvamVoicePlayer({ text, language = 'hi-IN' }: SarvamVoicePlaye
                     Regional Voice Narration
                 </p>
                 <p className="text-sm font-bold text-white tracking-tight">
-                    Listen to explanation in <span className="text-medical-accent">Hindi</span>
+                    Listen to explanation in <span className="text-medical-accent">{languageName}</span>
                 </p>
             </div>
 

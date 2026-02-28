@@ -60,7 +60,7 @@ export async function runExtractionAgent(
     if (imageBuffer && mimeType.startsWith('image/')) {
         // ── VISION MODE (images + scanned PDFs) ──────────────────────────
         const response = await ai.generate({
-            model: 'googleai/gemini-2.5-flash',
+            model: 'googleai/gemini-3.0-flash',
             prompt: [
                 {
                     text: `${SWASTHYA_SYSTEM_PROMPT}\n${EXTRACTION_TASK}\n${nerSection}\nAnalyze the medical report image below:`,
@@ -79,7 +79,7 @@ export async function runExtractionAgent(
 
     // ── TEXT MODE (PDF text layer + TXT files) ────────────────────────────
     const response = await ai.generate({
-        model: 'googleai/gemini-2.5-flash',
+        model: 'googleai/gemini-3.0-flash',
         prompt: `${SWASTHYA_SYSTEM_PROMPT}\n${EXTRACTION_TASK}\n${nerSection}\n\nMEDICAL DOCUMENT TEXT:\n\`\`\`\n${rawText ?? ''}\n\`\`\`\n\nExtract all lab parameters from this text.`,
         output: { schema: ExtractionSchema },
     });

@@ -63,7 +63,7 @@
   .light .bg-slate-950\/40,
   .light .bg-white\/5 {
     background-color: rgba(255, 255, 255, 0.8) !important;
-    border-color: rgba(0,0,0,0.08) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
   }
 
   /* Description text in light mode */
@@ -97,4 +97,33 @@
   .light .dark\:to-slate-400 {
     --tw-gradient-to: #475569;
   }
+}
+
+/* ── Accessibility Features ──────────────────────── */
+html.text-size-normal {
+  font-size: 16px;
+}
+
+html.text-size-large {
+  font-size: 18px;
+}
+
+html.text-size-extralarge {
+  font-size: 22px;
+}
+
+html.high-contrast,
+html.high-contrast * {
+  color: #ffffff !important;
+  background-color: #000000 !important;
+  border-color: #ffffff !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+
+html.high-contrast img,
+html.high-contrast svg,
+html.high-contrast video {
+  filter: grayscale(100%) contrast(120%) !important;
+  background-color: transparent !important;
 }

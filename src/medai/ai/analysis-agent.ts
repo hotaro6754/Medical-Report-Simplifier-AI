@@ -41,7 +41,7 @@ export async function runAnalysisAgent(extractionData: any, nerContext: string =
         : '';
 
     const response = await ai.generate({
-        model: 'googleai/gemini-2.5-flash',
+        model: 'googleai/gemini-3.0-flash',
         prompt: `${SWASTHYA_SYSTEM_PROMPT}
 
 ═══════════════════════════════════════════════════════════

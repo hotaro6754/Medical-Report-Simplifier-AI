@@ -14,7 +14,7 @@ const ai = genkit({
 export async function askFollowUpQuestion(report: MedicalReport, question: string) {
     try {
         const response = await ai.generate({
-            model: 'googleai/gemini-2.0-flash',
+            model: 'googleai/gemini-2.5-flash',
             prompt: `${SWASTHYA_SYSTEM_PROMPT}
 
 ═══════════════════════════════════════════════════════════
@@ -43,6 +43,10 @@ ANSWER:`,
         return response.text;
     } catch (err: any) {
         console.error('[Chat Agent] Error:', err.message);
+        const msg = err.message?.toLowerCase() || '';
+        if (msg.includes('429') || msg.includes('quota') || msg.includes('timeout') || msg.includes('rate limit')) {
+            throw new Error('API Key rate limit exceeded or timeout reached. Please wait and try again or check your Gemini API usage.');
+        }
         throw new Error('Failed to generate response. Please try again.');
     }
 }

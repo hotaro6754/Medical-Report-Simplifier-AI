@@ -31,7 +31,11 @@ export default function LoginPage() {
         });
 
         if (error) {
-            setError(error.message);
+            let msg = error.message;
+            if (msg.includes('Email not confirmed')) {
+                msg = 'Email not confirmed. Please check your inbox for the verification link.';
+            }
+            setError(msg);
             setLoading(false);
         } else {
             router.push('/');
@@ -136,6 +140,20 @@ export default function LoginPage() {
                                     Create one here
                                 </Link>
                             </p>
+                            <div className="border-t border-white/5 pt-6 mt-6">
+                                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3">Quick Demo Access</p>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setEmail('test@swasthya.ai');
+                                        setPassword('Test@1234');
+                                    }}
+                                    className="w-full py-4 bg-emerald-600/10 border border-emerald-500/20 hover:bg-emerald-600/20 text-emerald-400 font-black rounded-2xl transition-all text-[10px] uppercase tracking-widest"
+                                >
+                                    Fill Demo Credentials
+                                </button>
+                                <p className="mt-2 text-[10px] text-slate-600 font-medium">test@swasthya.ai / Test@1234</p>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>

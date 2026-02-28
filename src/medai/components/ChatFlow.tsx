@@ -74,15 +74,15 @@ export function ChatFlow({ report }: ChatFlowProps) {
     };
 
     return (
-        <div className="w-full rounded-[3rem] border border-white/10 shadow-3xl overflow-hidden glass-effect bg-slate-950/40 backdrop-blur-3xl flex flex-col h-[600px]">
+        <div className="w-full rounded-[3rem] border border-white/20 dark:border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.1)] overflow-hidden bg-white/10 dark:bg-black/20 backdrop-blur-[40px] flex flex-col h-[600px]">
             {/* Header */}
-            <div className="p-6 border-b border-white/5 bg-slate-900/40 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    <Bot className="w-6 h-6 text-blue-400" />
+            <div className="p-6 border-b border-white/10 dark:border-white/5 bg-black/5 dark:bg-black/30 backdrop-blur-md flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shadow-[0_2px_15px_rgba(59,130,246,0.3)]">
+                    <Bot className="w-6 h-6 text-blue-500 dark:text-blue-400" />
                 </div>
                 <div>
-                    <h3 className="text-lg font-black text-white uppercase tracking-widest">Swasthya Copilot</h3>
-                    <p className="text-[10px] text-emerald-400 font-bold tracking-[0.3em] uppercase flex items-center gap-2">
+                    <h3 className="text-lg font-black text-slate-800 dark:text-white uppercase tracking-widest">Swasthya Copilot</h3>
+                    <p className="text-[10px] text-emerald-500 dark:text-emerald-400 font-bold tracking-[0.3em] uppercase flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                         Online & Ready
                     </p>
@@ -100,13 +100,13 @@ export function ChatFlow({ report }: ChatFlowProps) {
                             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
                             <div className={`flex gap-3 max-w-[80%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 ${msg.role === 'user' ? 'bg-indigo-500 text-white shadow-lg' : 'bg-slate-800 text-blue-400 border border-white/5'
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 ${msg.role === 'user' ? 'bg-indigo-500 text-white shadow-lg' : 'bg-white/40 dark:bg-slate-800 text-blue-600 dark:text-blue-400 border border-white/40 dark:border-white/5 backdrop-blur-md'
                                     }`}>
                                     {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                                 </div>
                                 <div className={`p-4 rounded-[1.5rem] relative ${msg.role === 'user'
-                                    ? 'bg-blue-600/90 text-white rounded-tr-sm border border-blue-500 shadow-xl'
-                                    : 'bg-slate-900/80 text-slate-200 rounded-tl-sm border border-white/5'
+                                    ? 'bg-blue-600/90 text-white rounded-tr-sm border border-blue-500/50 shadow-xl backdrop-blur-md'
+                                    : 'bg-white/40 dark:bg-black/40 text-slate-800 dark:text-slate-200 rounded-tl-sm border border-white/40 dark:border-white/10 backdrop-blur-xl shadow-sm'
                                     }`}>
                                     {msg.isStreaming && !msg.content ? (
                                         <div className="flex gap-1 py-1 px-2">
@@ -115,9 +115,16 @@ export function ChatFlow({ report }: ChatFlowProps) {
                                             <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" />
                                         </div>
                                     ) : (
-                                        <p className="text-sm md:text-base leading-relaxed font-medium whitespace-pre-wrap">
-                                            {msg.content}
-                                        </p>
+                                        <div className="flex flex-col gap-3">
+                                            <p className="text-sm md:text-base leading-relaxed font-medium whitespace-pre-wrap">
+                                                {msg.content}
+                                            </p>
+                                            {msg.role === 'assistant' && (
+                                                <div className="mt-1 flex justify-start">
+                                                    <VoiceControls text={msg.content} compact />
+                                                </div>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -128,7 +135,7 @@ export function ChatFlow({ report }: ChatFlowProps) {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-white/5 bg-slate-900/60 backdrop-blur-lg">
+            <div className="p-4 border-t border-white/10 dark:border-white/5 bg-black/5 dark:bg-black/40 backdrop-blur-xl">
                 <div className="flex items-center gap-3">
                     <div className="flex-1 relative">
                         <input
@@ -139,7 +146,7 @@ export function ChatFlow({ report }: ChatFlowProps) {
                                 if (e.key === 'Enter') handleSend(inputValue);
                             }}
                             placeholder="Ask about your diet, next steps, or parameters..."
-                            className="w-full bg-slate-950/50 border border-white/10 rounded-2xl py-4 pl-4 pr-16 text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all text-sm font-medium"
+                            className="w-full bg-white/50 dark:bg-slate-950/50 border border-white/40 dark:border-white/10 shadow-inner rounded-2xl py-4 pl-4 pr-16 text-slate-800 dark:text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all text-sm font-medium backdrop-blur-md"
                             disabled={isLoading}
                         />
                         <div className="absolute right-2 top-1/2 -translate-y-1/2">

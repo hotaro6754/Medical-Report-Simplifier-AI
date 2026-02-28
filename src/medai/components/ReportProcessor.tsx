@@ -22,9 +22,10 @@ import { VoiceControls } from './VoiceControls';
 import { AuthModal } from './AuthModal';
 import { useAuth } from './AuthContext';
 import { ChatFlow } from './ChatFlow';
+import { mockReportData } from '../data/mockReport';
 
 export function ReportProcessor() {
-    const { t } = useLanguage();
+    const { t, activeLanguageDetails } = useLanguage();
     const { user } = useAuth();
     const [report, setReport] = useState<MedicalReport | null>(null);
     const [loading, setLoading] = useState(false);
@@ -44,7 +45,12 @@ export function ReportProcessor() {
             const result = await processMedicalReport(formData);
             setReport(result);
         } catch (err: any) {
-            setError(err.message || 'Failed to process report');
+            const msg = err.message || 'Failed to process report';
+            if (msg.includes('rate limit') || msg.includes('429') || msg.includes('quota') || msg.includes('timeout')) {
+                setError('API rate limit or timeout reached. Please wait a moment and try again.');
+            } else {
+                setError(msg);
+            }
         } finally {
             setLoading(false);
             setPreviewUrl(null);
@@ -62,9 +68,20 @@ export function ReportProcessor() {
 
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('language', activeLanguageDetails.name); // E.g., 'Telugu'
         if (voicePrompt) formData.append('symptoms', voicePrompt);
 
         await runAnalysis(formData);
+    };
+
+    const handleLoadDemo = async () => {
+        setLoading(true);
+        setError(null);
+        // Simulate a typical processing delay for the demo
+        setTimeout(() => {
+            setReport(mockReportData);
+            setLoading(false);
+        }, 3000);
     };
 
     if (loading) {
@@ -154,9 +171,13 @@ export function ReportProcessor() {
                             </div>
 
                             <div className="space-y-6">
-                                <SarvamVoicePlayer text={report.hindiExplanation || ''} />
+                                <SarvamVoicePlayer
+                                    text={report.regionalExplanation || ''}
+                                    languageCode={activeLanguageDetails.sarvamCode}
+                                    languageName={activeLanguageDetails.native}
+                                />
                                 <div className="text-slate-300 leading-relaxed bg-white/5 p-8 rounded-[2rem] border border-white/5 italic font-bold text-lg tracking-tight">
-                                    {report.hindiExplanation}
+                                    {report.regionalExplanation}
                                 </div>
                             </div>
                         </CardContent>
@@ -320,10 +341,21 @@ export function ReportProcessor() {
                         {t('selectFileBtn')}
                     </Button>
 
+                    <Button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleLoadDemo();
+                        }}
+                        variant="ghost"
+                        className="mt-4 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 font-bold uppercase tracking-widest text-xs z-30 transition-colors rounded-full px-6 py-2 border border-blue-500/20"
+                    >
+                        Load Demo Report (Judges)
+                    </Button>
+
                     <div className="mt-8 z-30 flex flex-col items-center">
                         <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.4em] mb-4">Or describe your symptoms</p>
                         <VoiceControls
-                            languageCode="hi-IN"
+                            languageCode={activeLanguageDetails.sarvamCode}
                             onTranscript={(text) => {
                                 setVoicePrompt(text);
                             }}
@@ -355,9 +387,22 @@ export function ReportProcessor() {
                     </div>
 
                     {error && (
-                        <div className="mt-10 p-5 bg-red-500/10 text-red-400 rounded-2xl border border-red-500/20 flex items-center gap-4 animate-shake">
-                            <AlertCircle className="w-6 h-6 flex-shrink-0" />
-                            <p className="text-sm font-bold uppercase tracking-wide">{error}</p>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] w-[90%] max-w-md p-6 bg-red-950/90 backdrop-blur-3xl text-red-50 rounded-[2rem] border-2 border-red-500/50 flex flex-col items-center gap-4 text-center shadow-[0_0_50px_rgba(239,68,68,0.4)] animate-in zoom-in-95 duration-300">
+                            <AlertCircle className="w-12 h-12 text-red-400 animate-pulse" />
+                            <div>
+                                <h4 className="text-xl font-black uppercase tracking-widest text-red-400 mb-2">Processing Error</h4>
+                                <p className="text-sm font-bold leading-relaxed opacity-90">{error}</p>
+                            </div>
+                            <Button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setError(null);
+                                }}
+                                variant="outline"
+                                className="w-full mt-2 bg-red-500/10 border-red-500/30 text-red-300 hover:bg-red-500/20 hover:text-red-200 uppercase tracking-widest text-xs font-black transition-all"
+                            >
+                                Dismiss
+                            </Button>
                         </div>
                     )}
                 </CardContent>

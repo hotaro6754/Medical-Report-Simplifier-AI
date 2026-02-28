@@ -27,7 +27,7 @@ export function ParameterCard({ parameter, index }: ParameterCardProps) {
             transition={{ delay: 0.1 * index }}
             className={`group flex flex-col p-6 rounded-[2rem] border transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl ${statusStyles[parameter.status]} backdrop-blur-sm border-white/5 bg-slate-900/40`}
         >
-            <div className="flex justify-between items-start mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <div className="flex flex-col">
                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2">Parameter</span>
                     <h4 className="text-xl font-black text-white tracking-tight group-hover:text-blue-400 transition-colors uppercase">{parameter.name}</h4>

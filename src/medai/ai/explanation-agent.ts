@@ -2,16 +2,16 @@ import { z } from 'zod';
 import { createAI } from '@/ai/genkit';
 import { SWASTHYA_SYSTEM_PROMPT } from './guardrails';
 
-export const ExplanationSchema = z.object({
+export const buildExplanationSchema = () => z.object({
     englishExplanation: z.string().min(50)
         .describe('A warm, clear English explanation of the overall findings. 3–5 sentences. Simple language, no jargon.'),
-    hindiExplanation: z.string().min(50)
-        .describe('The same explanation translated into conversational Hindi (Devanagari script). Culturally sensitive.'),
+    regionalExplanation: z.string().min(50)
+        .describe('The same explanation translated into conversational tone using the specific target language requested. Culturally sensitive.'),
     culturalContext: z.string().min(20)
         .describe('Specific lifestyle or dietary advice tailored to Indian rural context. Reference local foods or traditions.'),
 });
 
-export async function runExplanationAgent(analysisData: any, language: string = 'hi') {
+export async function runExplanationAgent(analysisData: any, languageNativeName: string = 'Hindi') {
     const ai = await createAI();
 
     const response = await ai.generate({
@@ -35,9 +35,10 @@ EXPLANATION REQUIREMENTS:
    - End with reassurance and the importance of seeing a doctor.
    - Do NOT use unexplained medical acronyms. Spell out: CBC = Complete Blood Count.
 
-2. HINDI EXPLANATION (Devanagari):
-   - Translate the English explanation into conversational Hindi.
-   - Use everyday Hindi — avoid overly formal or clinical language.
+2. REGIONAL EXPLANATION (${languageNativeName}):
+   - Translate the English explanation into conversational ${languageNativeName}.
+   - Use the native script for ${languageNativeName}.
+   - Use everyday vocabulary — avoid overly formal or clinical language.
    - Make it sound like a knowledgeable friend explaining, not a textbook.
 
 3. CULTURAL CONTEXT:
@@ -50,7 +51,7 @@ GUARDRAILS:
 - Do NOT give a final diagnosis.
 - Always include a reminder to consult a qualified doctor.`,
         output: {
-            schema: ExplanationSchema,
+            schema: buildExplanationSchema(),
         },
     });
 

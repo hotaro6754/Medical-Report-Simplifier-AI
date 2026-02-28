@@ -28,46 +28,46 @@ export type SarvamLanguageCode =
 // Available Sarvam bulbul:v3 voices per language
 export const SARVAM_VOICES: Record<SarvamLanguageCode, { id: string; name: string; gender: 'M' | 'F' }[]> = {
     'hi-IN': [
-        { id: 'meera', name: 'Meera', gender: 'F' },
-        { id: 'pavithra', name: 'Pavithra', gender: 'F' },
-        { id: 'maitreyi', name: 'Maitreyi', gender: 'F' },
-        { id: 'arvind', name: 'Arvind', gender: 'M' },
-        { id: 'amol', name: 'Amol', gender: 'M' },
+        { id: 'priya', name: 'Priya', gender: 'F' },
+        { id: 'neha', name: 'Neha', gender: 'F' },
+        { id: 'ritu', name: 'Ritu', gender: 'F' },
+        { id: 'rahul', name: 'Rahul', gender: 'M' },
+        { id: 'amit', name: 'Amit', gender: 'M' },
     ],
     'te-IN': [
-        { id: 'hema', name: 'Hema', gender: 'F' },
-        { id: 'lekha', name: 'Lekha', gender: 'F' },
+        { id: 'kavitha', name: 'Kavitha', gender: 'F' },
+        { id: 'shreya', name: 'Shreya', gender: 'F' },
     ],
     'ta-IN': [
-        { id: 'nila', name: 'Nila', gender: 'F' },
-        { id: 'vian', name: 'Vian', gender: 'M' },
+        { id: 'shruti', name: 'Shruti', gender: 'F' },
+        { id: 'vijay', name: 'Vijay', gender: 'M' },
     ],
     'kn-IN': [
-        { id: 'maya', name: 'Maya', gender: 'F' },
-        { id: 'kiran', name: 'Kiran', gender: 'M' },
+        { id: 'pooja', name: 'Pooja', gender: 'F' },
+        { id: 'rohan', name: 'Rohan', gender: 'M' },
     ],
     'ml-IN': [
-        { id: 'lekha', name: 'Lekha', gender: 'F' },
+        { id: 'ritu', name: 'Ritu', gender: 'F' },
     ],
     'mr-IN': [
-        { id: 'maitreyi', name: 'Maitreyi', gender: 'F' },
-        { id: 'amol', name: 'Amol', gender: 'M' },
+        { id: 'simran', name: 'Simran', gender: 'F' },
+        { id: 'mohit', name: 'Mohit', gender: 'M' },
     ],
     'gu-IN': [
-        { id: 'diya', name: 'Diya', gender: 'F' },
+        { id: 'kavya', name: 'Kavya', gender: 'F' },
     ],
     'pa-IN': [
-        { id: 'pavithra', name: 'Pavithra', gender: 'F' },
+        { id: 'roopa', name: 'Roopa', gender: 'F' },
     ],
     'bn-IN': [
-        { id: 'diya', name: 'Diya', gender: 'F' },
+        { id: 'tanya', name: 'Tanya', gender: 'F' },
     ],
     'or-IN': [
-        { id: 'nila', name: 'Nila', gender: 'F' },
+        { id: 'shruti', name: 'Shruti', gender: 'F' },
     ],
     'en-IN': [
-        { id: 'meera', name: 'Meera', gender: 'F' },
-        { id: 'arvind', name: 'Arvind', gender: 'M' },
+        { id: 'amelia', name: 'Amelia', gender: 'F' },
+        { id: 'dev', name: 'Dev', gender: 'M' },
     ],
 };
 
@@ -126,7 +126,6 @@ export async function textToSpeech(options: TtsOptions): Promise<TtsResult> {
             speaker: selectedSpeaker,
             model: 'bulbul:v3',
             pace,
-            loudness,
             enable_preprocessing: true,
         }),
     });

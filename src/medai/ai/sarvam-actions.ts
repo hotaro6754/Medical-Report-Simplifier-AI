@@ -17,10 +17,8 @@ export async function generateSarvamVoice(text: string, language: string = 'hi-I
             body: JSON.stringify({
                 inputs: [text],
                 target_language_code: language,
-                speaker: 'meera', // Professional female voice
-                pitch: 0,
+                speaker: 'anushka',
                 pace: 1,
-                loudness: 1.5,
                 model: 'bulbul:v1',
             }),
         });

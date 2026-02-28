@@ -32,7 +32,7 @@ export async function speechToText(
 
     const formData = new FormData();
     formData.append('file', audioBlob, 'recording.wav');
-    formData.append('model', 'saarika:v2');
+    formData.append('model', 'saarika:v2.5');
     formData.append('language_code', languageCode);
     formData.append('with_timestamps', 'false');
     formData.append('with_diarization', 'false');

@@ -27,7 +27,7 @@ import { MedicalReport, Severity } from '../types/medical';
  * 8. Final Assembly    → MedicalReport with session audit ID
  */
 export class AgentOrchestrator {
-    async processReport(imageBuffer: Buffer, mimeType: string, filename?: string, symptoms?: string): Promise<MedicalReport> {
+    async processReport(imageBuffer: Buffer, mimeType: string, filename?: string, symptoms?: string, language: string = 'Hindi'): Promise<MedicalReport> {
         const sessionId = generateSessionId();
         console.log(`[${sessionId}] ═══ Swasthya AI Pipeline Start ═══`);
         console.log(`[${sessionId}] File: ${filename ?? 'unknown'} | MIME: ${mimeType}`);
@@ -119,7 +119,7 @@ export class AgentOrchestrator {
         // ─── STEP 7: PARALLEL AGENTS ─────────────────────────────────────────
         console.log(`[${sessionId}] Step 7: Explanation + Citations in parallel`);
         const [explanationData, citationsData] = await Promise.all([
-            runExplanationAgent(analysisData),
+            runExplanationAgent(analysisData, language),
             runCitationsAgent(analysisData),
         ]);
 
@@ -170,7 +170,7 @@ export class AgentOrchestrator {
                 };
             }),
             summary: analysisData!.summary,
-            hindiExplanation: `${explanationData.hindiExplanation}\n\n${DISCLAIMER_HI}`,
+            regionalExplanation: `${explanationData.regionalExplanation}\n\n${DISCLAIMER_HI}`,
             imageBase64: ocrResult.originalBuffer.toString('base64'),
             imageMimeType: ocrResult.originalMimeType,
             citations: citationsData?.citations ?? [],

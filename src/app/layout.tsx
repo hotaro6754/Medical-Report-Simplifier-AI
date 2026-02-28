@@ -3,6 +3,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/medai/components/ThemeProvider";
 import { ThemeToggle } from "@/medai/components/ThemeToggle";
 import { NavigationHUB } from "@/medai/components/NavigationHUB";
+import { AccessibilityProvider } from "@/medai/components/AccessibilityContext";
+import { AccessibilityMenu } from "@/medai/components/AccessibilityMenu";
 import { LanguageProvider } from "@/medai/components/LanguageContext";
 import { LanguageSwitcher } from "@/medai/components/LanguageSwitcher";
 import { AuthProvider } from "@/medai/components/AuthContext";
@@ -61,17 +63,20 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <LanguageProvider>
-            <AuthProvider>
-              <NavigationHUB />
-              <LanguageSwitcher />
-              <ThemeToggle />
-              <main>
-                {children}
-              </main>
-              <Toaster />
-            </AuthProvider>
-          </LanguageProvider>
+          <AccessibilityProvider>
+            <LanguageProvider>
+              <AuthProvider>
+                <NavigationHUB />
+                <LanguageSwitcher />
+                <AccessibilityMenu />
+                <ThemeToggle />
+                <main>
+                  {children}
+                </main>
+                <Toaster />
+              </AuthProvider>
+            </LanguageProvider>
+          </AccessibilityProvider>
         </ThemeProvider>
       </body>
     </html>

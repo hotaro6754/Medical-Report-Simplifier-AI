@@ -37,7 +37,7 @@ export interface MedicalReport {
     riskAssessment: RiskAssessment;
     dietaryAdvice: string[];
     nextSteps: string[];
-    hindiExplanation?: string;
+    regionalExplanation?: string;
     audioUrl?: string;
     imageMimeType?: string;
     imageBase64?: string;

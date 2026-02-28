@@ -16,6 +16,7 @@ const ACCEPTED_TYPES = [
 export async function processMedicalReport(formData: FormData): Promise<MedicalReport> {
     const file = formData.get('file') as File;
     const symptoms = (formData.get('symptoms') as string) || undefined;
+    const language = (formData.get('language') as string) || 'Hindi';
     if (!file) throw new Error('No file provided. Please upload a lab report.');
 
     const mimeType = file.type || 'application/octet-stream';
@@ -31,7 +32,16 @@ export async function processMedicalReport(formData: FormData): Promise<MedicalR
     const buffer = Buffer.from(arrayBuffer);
 
     const orchestrator = new AgentOrchestrator();
-    const report = await orchestrator.processReport(buffer, mimeType, file.name, symptoms);
+    let report: MedicalReport;
+    try {
+        report = await orchestrator.processReport(buffer, mimeType, file.name, symptoms, language);
+    } catch (error: any) {
+        const msg = error.message?.toLowerCase() || '';
+        if (msg.includes('429') || msg.includes('quota') || msg.includes('timeout') || msg.includes('rate limit')) {
+            throw new Error('API Key rate limit exceeded or timeout reached. Please wait and try again or check your Gemini API usage.');
+        }
+        throw error;
+    }
 
     // ── Save to Supabase (fire & forget — don't block the response) ────────
     // We execute this concurrently but don't await to block the UI

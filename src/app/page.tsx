@@ -3,7 +3,18 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ReportProcessor } from '@/medai/components/ReportProcessor';
+import dynamic from 'next/dynamic';
+const ReportProcessor = dynamic(() => import('@/medai/components/ReportProcessor').then(mod => mod.ReportProcessor), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[500px] w-full flex items-center justify-center bg-slate-900/50 glass-effect rounded-[3rem] border border-white/5 animate-pulse shadow-2xl">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+        <p className="text-white font-black tracking-widest uppercase text-xs">Loading AI Copilot...</p>
+      </div>
+    </div>
+  )
+});
 import { Heart, ShieldCheck, Zap, Globe, MapPin, AudioWaveform as Waveform, ArrowDown } from 'lucide-react';
 import '@/medai/styles/design-system.css';
 import { useTheme } from 'next-themes';
@@ -156,7 +167,7 @@ export default function HomePage() {
       </div>
 
       {/* Utility Section */}
-      <section id="analysis" className="relative h-screen bg-medical-surface flex flex-col items-center justify-center px-4 overflow-x-hidden">
+      <section id="analysis" className="relative min-h-screen z-20 bg-medical-surface flex flex-col items-center justify-center px-4 py-24 overflow-x-hidden">
         <motion.div
           className="w-full max-w-4xl"
           initial={{ opacity: 0, y: 100 }}

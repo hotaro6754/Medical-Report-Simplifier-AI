@@ -1,15 +1,38 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { SarvamLanguageCode } from '../ai/sarvam-tts';
 
 export type Language =
     | 'en' | 'hi' | 'te' | 'ta' | 'kn' | 'ml'
     | 'bn' | 'mr' | 'gu' | 'pa' | 'or';
 
+interface LanguageDetails {
+    code: Language;
+    name: string;
+    native: string;
+    sarvamCode: SarvamLanguageCode;
+}
+
+export const LANGUAGES: LanguageDetails[] = [
+    { code: 'en', name: 'English', native: 'English', sarvamCode: 'en-IN' },
+    { code: 'hi', name: 'Hindi', native: 'हिन्दी', sarvamCode: 'hi-IN' },
+    { code: 'te', name: 'Telugu', native: 'తెలుగు', sarvamCode: 'te-IN' },
+    { code: 'ta', name: 'Tamil', native: 'தமிழ்', sarvamCode: 'ta-IN' },
+    { code: 'kn', name: 'Kannada', native: 'ಕನ್ನಡ', sarvamCode: 'kn-IN' },
+    { code: 'ml', name: 'Malayalam', native: 'മലയാളം', sarvamCode: 'ml-IN' },
+    { code: 'bn', name: 'Bengali', native: 'বাংলা', sarvamCode: 'bn-IN' },
+    { code: 'mr', name: 'Marathi', native: 'मराठी', sarvamCode: 'mr-IN' },
+    { code: 'gu', name: 'Gujarati', native: 'ગુજરાતી', sarvamCode: 'gu-IN' },
+    { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ', sarvamCode: 'pa-IN' },
+    { code: 'or', name: 'Odia', native: 'ଓଡ଼ିଆ', sarvamCode: 'or-IN' },
+];
+
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
     t: (key: string) => string;
+    activeLanguageDetails: LanguageDetails;
 }
 
 const translations: Record<Language, Record<string, string>> = {
@@ -164,8 +187,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         return translations[language]?.[key] || translations['en']?.[key] || key;
     };
 
+    const activeLanguageDetails = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
+
     return (
-        <LanguageContext.Provider value={{ language, setLanguage, t }}>
+        <LanguageContext.Provider value={{ language, setLanguage, t, activeLanguageDetails }}>
             {children}
         </LanguageContext.Provider>
     );

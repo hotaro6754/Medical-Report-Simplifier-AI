@@ -16,6 +16,9 @@ interface ReportRow {
     risk_assessment: string;
     summary: string;
     uploaded_at: string;
+    parameters?: any[];
+    dietary_advice?: string[];
+    next_steps?: string[];
 }
 
 const severityConfig: Record<string, { color: string; bg: string; label: string }> = {
@@ -47,6 +50,7 @@ export default function HistoryPage() {
     const router = useRouter();
     const [reports, setReports] = useState<ReportRow[]>([]);
     const [fetching, setFetching] = useState(true);
+    const [expandedId, setExpandedId] = useState<string | null>(null);
 
     useEffect(() => {
         if (!loading && !user) {
@@ -58,7 +62,7 @@ export default function HistoryPage() {
         if (!user) return;
         supabase
             .from('medical_reports')
-            .select('id, type, severity, health_score, risk_assessment, summary, uploaded_at')
+            .select('id, type, severity, health_score, risk_assessment, summary, uploaded_at, parameters, dietary_advice, next_steps')
             .eq('user_id', user.id)
             .order('uploaded_at', { ascending: false })
             .then(({ data, error }) => {
@@ -133,39 +137,95 @@ export default function HistoryPage() {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: i * 0.05 }}
-                                        className="group flex items-center gap-6 p-6 bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-[2rem] hover:border-blue-500/20 hover:bg-slate-800/50 transition-all duration-500 cursor-pointer"
-                                        onClick={() => router.push('/')}
+                                        className={`group flex flex-col gap-6 p-6 bg-slate-900/40 backdrop-blur-xl border ${expandedId === report.id ? 'border-blue-500/50 bg-slate-800/80 shadow-2xl' : 'border-white/5 hover:border-blue-500/20 hover:bg-slate-800/50'} rounded-[2rem] transition-all duration-500 cursor-pointer overflow-hidden`}
+                                        onClick={() => setExpandedId(expandedId === report.id ? null : report.id)}
                                     >
-                                        {/* Score Ring */}
-                                        <ScoreRing score={report.health_score} />
+                                        <div className="flex items-center gap-6">
+                                            {/* Score Ring */}
+                                            <ScoreRing score={report.health_score} />
 
-                                        {/* Info */}
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-3 mb-2">
-                                                <span className="text-white font-black text-base uppercase tracking-tight truncate">
-                                                    {report.type}
-                                                </span>
-                                                <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full border ${cfg.bg} ${cfg.color}`}>
-                                                    {cfg.label}
-                                                </span>
+                                            {/* Info */}
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-3 mb-2">
+                                                    <span className="text-white font-black text-base uppercase tracking-tight truncate">
+                                                        {report.type}
+                                                    </span>
+                                                    <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full border ${cfg.bg} ${cfg.color}`}>
+                                                        {cfg.label}
+                                                    </span>
+                                                </div>
+                                                <p className="text-slate-500 text-[11px] font-bold leading-relaxed line-clamp-2 mb-2">
+                                                    {report.summary}
+                                                </p>
+                                                <div className="flex items-center gap-2 text-slate-600">
+                                                    <Clock className="w-3 h-3" />
+                                                    <span className="text-[9px] font-black uppercase tracking-widest">
+                                                        {date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })} · {date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <p className="text-slate-500 text-[11px] font-bold leading-relaxed line-clamp-2 mb-2">
-                                                {report.summary}
-                                            </p>
-                                            <div className="flex items-center gap-2 text-slate-600">
-                                                <Clock className="w-3 h-3" />
-                                                <span className="text-[9px] font-black uppercase tracking-widest">
-                                                    {date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })} · {date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
-                                                </span>
+
+                                            {/* Risk badge */}
+                                            <div className="flex flex-col items-end gap-2">
+                                                <span className="text-[8px] font-black uppercase tracking-widest text-slate-600">Risk</span>
+                                                <span className={`text-xs font-black uppercase ${cfg.color}`}>{report.risk_assessment}</span>
+                                                <ChevronRight className={`w-4 h-4 text-slate-700 transition-all ${expandedId === report.id ? 'rotate-90 text-blue-400' : 'group-hover:text-blue-400 group-hover:translate-x-1'}`} />
                                             </div>
                                         </div>
 
-                                        {/* Risk badge */}
-                                        <div className="flex flex-col items-end gap-2">
-                                            <span className="text-[8px] font-black uppercase tracking-widest text-slate-600">Risk</span>
-                                            <span className={`text-xs font-black uppercase ${cfg.color}`}>{report.risk_assessment}</span>
-                                            <ChevronRight className="w-4 h-4 text-slate-700 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
-                                        </div>
+                                        {expandedId === report.id && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                className="border-t border-white/5 pt-6 mt-2 space-y-6"
+                                            >
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                    {report.parameters && report.parameters.length > 0 && (
+                                                        <div className="space-y-4">
+                                                            <h4 className="text-[10px] uppercase tracking-widest font-black text-slate-500">Key Parameters</h4>
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {report.parameters.map((p: any, idx) => (
+                                                                    <div key={idx} className="bg-white/5 border border-white/10 rounded-xl px-3 py-2">
+                                                                        <div className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">{p.name}</div>
+                                                                        <div className="flex items-end gap-1">
+                                                                            <span className={`text-sm font-black ${p.status === 'normal' ? 'text-emerald-400' : p.status === 'attention' ? 'text-yellow-400' : 'text-red-400'}`}>
+                                                                                {p.value}
+                                                                            </span>
+                                                                            <span className="text-[9px] text-slate-500 mb-0.5">{p.unit}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    <div className="space-y-4">
+                                                        {(report.next_steps && report.next_steps.length > 0) && (
+                                                            <div>
+                                                                <h4 className="text-[10px] uppercase tracking-widest font-black text-slate-500 mb-3">Recommended Actions</h4>
+                                                                <ul className="space-y-2">
+                                                                    {report.next_steps.map((step, idx) => (
+                                                                        <li key={idx} className="flex gap-2 text-xs font-bold text-slate-300">
+                                                                            <span className="text-blue-500 font-black">·</span> {step}
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
+                                                            </div>
+                                                        )}
+
+                                                        {(report.dietary_advice && report.dietary_advice.length > 0) && (
+                                                            <div className="mt-4">
+                                                                <h4 className="text-[10px] uppercase tracking-widest font-black text-slate-500 mb-3">Dietary Changes</h4>
+                                                                <p className="text-xs font-bold text-slate-300 leading-relaxed italic border-l-2 border-emerald-500/30 pl-3">
+                                                                    {report.dietary_advice.join('. ')}
+                                                                </p>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
                                     </motion.div>
                                 );
                             })}
