@@ -133,7 +133,7 @@ export function VoiceControls({
                 {text && (
                     <button
                         onClick={handleSpeak}
-                        className={`p-2 rounded-xl border transition-all ${ttsState === 'playing'
+                        className={`p-2 min-h-[48px] min-w-[48px] flex items-center justify-center rounded-xl border transition-all ${ttsState === 'playing'
                             ? 'bg-blue-500/20 border-blue-500/50 text-blue-400'
                             : 'bg-white/5 border-white/10 text-slate-500 hover:text-blue-400 hover:border-blue-500/30'
                             }`}
@@ -151,7 +151,7 @@ export function VoiceControls({
                 {onTranscript && (
                     <button
                         onClick={handleMic}
-                        className={`p-2 rounded-xl border transition-all relative ${sttState === 'recording'
+                        className={`p-2 min-h-[48px] min-w-[48px] flex items-center justify-center rounded-xl border transition-all relative ${sttState === 'recording'
                             ? 'bg-red-500/20 border-red-500/50 text-red-400'
                             : sttState === 'processing'
                                 ? 'bg-yellow-500/20 border-yellow-500/30 text-yellow-400'
@@ -183,7 +183,7 @@ export function VoiceControls({
                     <motion.button
                         whileTap={{ scale: 0.95 }}
                         onClick={handleSpeak}
-                        className={`flex items-center gap-2 px-4 py-3 rounded-2xl border font-black text-[10px] uppercase tracking-widest transition-all ${ttsState === 'playing'
+                        className={`flex items-center gap-2 px-4 py-3 min-h-[48px] min-w-[48px] rounded-2xl border font-black text-[10px] uppercase tracking-widest transition-all ${ttsState === 'playing'
                             ? 'bg-blue-500/20 border-blue-500/40 text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.2)]'
                             : 'bg-white/5 border-white/10 text-slate-500 hover:text-blue-400 hover:border-blue-500/30 hover:bg-blue-500/5'
                             }`}
@@ -206,7 +206,7 @@ export function VoiceControls({
                     <motion.button
                         whileTap={{ scale: 0.95 }}
                         onClick={handleMic}
-                        className={`flex items-center gap-2 px-4 py-3 rounded-2xl border font-black text-[10px] uppercase tracking-widest transition-all relative overflow-hidden ${sttState === 'recording'
+                        className={`flex items-center gap-2 px-4 py-3 min-h-[48px] min-w-[48px] rounded-2xl border font-black text-[10px] uppercase tracking-widest transition-all relative overflow-hidden ${sttState === 'recording'
                             ? 'bg-red-500/20 border-red-500/40 text-red-400'
                             : sttState === 'processing'
                                 ? 'bg-yellow-500/20 border-yellow-500/30 text-yellow-400'

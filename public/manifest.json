@@ -1,6 +1,6 @@
 {
-    "name": "MedExplain AI",
-    "short_name": "MedExplain",
+    "name": "Swasthya AI",
+    "short_name": "Swasthya AI",
     "description": "Healthcare Intelligence for Bharat. Simplify medical reports easily.",
     "start_url": "/",
     "display": "standalone",

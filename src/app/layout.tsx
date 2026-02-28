@@ -9,8 +9,33 @@ import { AuthProvider } from "@/medai/components/AuthContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://swasthya-ai-hrgs.onrender.com'),
   title: "Swasthya AI – Healthcare Intelligence for Bharat",
   description: "Simplifying complex lab reports into plain regional languages with scientific accuracy and empathy. Transforming rural healthcare.",
+  keywords: [
+    "healthcare AI",
+    "medical report explainer",
+    "rural healthcare India",
+    "Swasthya AI",
+    "lab test analysis",
+    "multilingual health tech",
+    "Bharat health"
+  ],
+  openGraph: {
+    type: "website",
+    url: "https://swasthya-ai-hrgs.onrender.com",
+    title: "Swasthya AI – Healthcare Intelligence for Bharat",
+    description: "Simplifying complex lab reports into plain regional languages with scientific accuracy and empathy.",
+    siteName: "Swasthya AI",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Swasthya AI – Healthcare Intelligence for Bharat",
+    description: "Transforming rural healthcare by simplifying medical reports using AI.",
+  },
+  verification: {
+    google: "PLACEHOLDER_FOR_GOOGLE_SEARCH_CONSOLE_VERIFICATION",
+  }
 };
 
 export default function RootLayout({
@@ -21,6 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta name="theme-color" content="#2563eb" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

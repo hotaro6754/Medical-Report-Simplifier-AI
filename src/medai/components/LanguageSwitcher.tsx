@@ -29,7 +29,7 @@ export function LanguageSwitcher() {
         <div className="fixed top-6 right-24 z-[100]">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 bg-white/5 backdrop-blur-2xl border border-white/10 px-4 py-3 rounded-2xl shadow-2xl hover:bg-white/10 transition-all group"
+                className="flex items-center gap-2 bg-white/5 backdrop-blur-2xl border border-white/10 px-4 py-3 min-h-[48px] min-w-[48px] rounded-2xl shadow-2xl hover:bg-white/10 transition-all group"
             >
                 <Languages className="w-4 h-4 text-medical-primary" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-white">
@@ -53,7 +53,7 @@ export function LanguageSwitcher() {
                                     setLanguage(lang.code);
                                     setIsOpen(false);
                                 }}
-                                className={`flex flex-col items-start px-3 py-2 rounded-xl transition-all ${language === lang.code
+                                className={`flex flex-col items-start px-3 py-2 min-h-[48px] min-w-[48px] justify-center rounded-xl transition-all ${language === lang.code
                                     ? 'bg-medical-primary text-white'
                                     : 'hover:bg-white/5 text-slate-400 hover:text-white'
                                     }`}

@@ -1,10 +1,10 @@
-# 🩺 MedExplain AI — Healthcare Intelligence for Bharat
+# 🩺 Swasthya AI — Healthcare Intelligence for Bharat
 
 <p align="center">
-  <img src="https://via.placeholder.com/200x200/4F46E5/FFFFFF?text=MedExplain" alt="MedExplain AI Logo" width="200"/>
+  <img src="https://via.placeholder.com/200x200/4F46E5/FFFFFF?text=Swasthya+AI" alt="Swasthya AI Logo" width="200"/>
 </p>
 
-<h1 align="center">MedExplain AI</h1>
+<h1 align="center">Swasthya AI</h1>
 
 <p align="center">
   <strong>🧠 AI-Powered Medical Report Simplification + 🏥 Smart Care Locator</strong>
@@ -63,7 +63,7 @@ Your mom gets a blood test. The report has 30+ numbers, weird words like "eosino
 
 **This happens to 1.3 billion Indians. Every day.**
 
-**MedExplain AI fixes this.**
+**Swasthya AI fixes this.**
 
 📱 **Upload a photo** of any medical report  
 🧠 **Our AI reads it** and understands the context  

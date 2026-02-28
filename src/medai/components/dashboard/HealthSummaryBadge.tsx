@@ -13,10 +13,19 @@ export function HealthSummaryBadge({ status }: HealthSummaryBadgeProps) {
         critical: {
             icon: ShieldAlert,
             label: 'Action Required',
-            color: 'text-red-400',
-            bg: 'bg-red-500/10',
-            border: 'border-red-500/20',
-            pulse: 'bg-red-500',
+            color: 'text-[#E11D48]',
+            bg: 'bg-[#E11D48]/10',
+            border: 'border-[#E11D48]/30',
+            pulse: 'bg-[#E11D48]',
+            animationProps: {
+                animate: {
+                    opacity: 1,
+                    x: 0,
+                    scale: [1, 1.05, 1],
+                    boxShadow: ["0px 0px 0px rgba(225,29,72,0)", "0px 0px 20px rgba(225,29,72,0.6)", "0px 0px 0px rgba(225,29,72,0)"]
+                },
+                transition: { repeat: Infinity, duration: 1.5, ease: "easeInOut" as const }
+            }
         },
         attention: {
             icon: AlertTriangle,
@@ -25,6 +34,7 @@ export function HealthSummaryBadge({ status }: HealthSummaryBadgeProps) {
             bg: 'bg-yellow-500/10',
             border: 'border-yellow-500/20',
             pulse: 'bg-yellow-500',
+            animationProps: { animate: { opacity: 1, x: 0 } }
         },
         normal: {
             icon: CheckCircle2,
@@ -33,15 +43,16 @@ export function HealthSummaryBadge({ status }: HealthSummaryBadgeProps) {
             bg: 'bg-emerald-500/10',
             border: 'border-emerald-500/20',
             pulse: 'bg-emerald-500',
+            animationProps: { animate: { opacity: 1, x: 0 } }
         }
     };
 
-    const { icon: Icon, label, color, bg, border, pulse } = config[status];
+    const { icon: Icon, label, color, bg, border, pulse, animationProps } = config[status];
 
     return (
         <motion.div
             initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            {...(animationProps || { animate: { opacity: 1, x: 0 } })}
             className={`inline-flex items-center gap-3 px-5 py-2.5 rounded-2xl ${bg} ${border} border backdrop-blur-xl shadow-lg`}
         >
             <div className="relative">

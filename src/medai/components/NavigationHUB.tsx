@@ -5,9 +5,12 @@ import { motion, useScroll, useSpring } from 'framer-motion';
 import { Activity, Mic, MapPin, FileText, ChevronRight } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 import { SwasthyaLogo } from './SwasthyaLogo';
+import { useAuth } from './AuthContext';
+import Link from 'next/link';
 
 export function NavigationHUB() {
     const { t } = useLanguage();
+    const { user, signOut } = useAuth();
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
@@ -67,13 +70,33 @@ export function NavigationHUB() {
 
                 <div className="h-4 w-[1px] bg-glass-border mx-1" />
 
-                {/* Analyse CTA */}
-                <button
-                    onClick={() => scrollToSection('analysis')}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/30 active:scale-95"
-                >
-                    {t('analyzeBtn')} <ChevronRight className="w-3 h-3" />
-                </button>
+                {/* Analyse CTA & Auth */}
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={() => scrollToSection('analysis')}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/30 active:scale-95 whitespace-nowrap"
+                    >
+                        {t('analyzeBtn')} <ChevronRight className="w-3 h-3" />
+                    </button>
+
+                    <div className="h-4 w-[1px] bg-glass-border mx-1" />
+
+                    {user ? (
+                        <button
+                            onClick={signOut}
+                            className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-red-400 transition-colors whitespace-nowrap px-2"
+                        >
+                            Log Out
+                        </button>
+                    ) : (
+                        <Link
+                            href="/auth/login"
+                            className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors whitespace-nowrap px-2"
+                        >
+                            Login
+                        </Link>
+                    )}
+                </div>
             </div>
         </motion.header>
     );

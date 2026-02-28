@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { processMedicalReport } from '../ai/actions';
 import { MedicalReport } from '../types/medical';
 import { Badge } from '@/components/ui/badge';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { AnnotatedReportViewer } from './AnnotatedReportViewer';
 import { ScanningBeam } from './ScanningBeam';
 import { SarvamVoicePlayer } from './SarvamVoicePlayer';
@@ -30,6 +31,8 @@ export function ReportProcessor() {
     const [error, setError] = useState<string | null>(null);
     const [voicePrompt, setVoicePrompt] = useState<string>('');
     const [showAuthModal, setShowAuthModal] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [isSimpleMode, setIsSimpleMode] = useState(false);
     const pendingFormDataRef = useRef<FormData | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -44,12 +47,15 @@ export function ReportProcessor() {
             setError(err.message || 'Failed to process report');
         } finally {
             setLoading(false);
+            setPreviewUrl(null);
         }
     };
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        setPreviewUrl(URL.createObjectURL(file));
 
         // Reset file input so same file can be re-uploaded
         if (fileInputRef.current) fileInputRef.current.value = '';
@@ -64,6 +70,9 @@ export function ReportProcessor() {
     if (loading) {
         return (
             <Card className="w-full h-[500px] flex flex-col items-center justify-center space-y-4 glass-effect relative overflow-hidden bg-slate-900/50 border-white/5 shadow-2xl rounded-[3rem]">
+                {previewUrl && (
+                    <img src={previewUrl} alt="Scanning Preview" className="absolute inset-0 w-full h-full object-cover opacity-20 filter blur-sm transition-all duration-1000 scale-105" />
+                )}
                 <ScanningBeam />
                 <div className="relative z-20 flex flex-col items-center gap-4">
                     <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
@@ -74,11 +83,35 @@ export function ReportProcessor() {
         );
     }
 
+    const containerVariants: any = {
+        hidden: { opacity: 0 },
+        show: { opacity: 1, transition: { staggerChildren: 0.15 } }
+    };
+    const itemVariants: any = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+    };
+
     if (report) {
         return (
-            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-20">
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+                className="space-y-12 pb-20"
+            >
+                {/* Simple Mode Toggle */}
+                <motion.div variants={itemVariants} className="flex justify-end pr-4">
+                    <button
+                        onClick={() => setIsSimpleMode(!isSimpleMode)}
+                        className={`px-6 py-2 min-h-[48px] min-w-[48px] rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${isSimpleMode ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'bg-white/5 text-slate-400 hover:bg-white/10 border border-white/5'}`}
+                    >
+                        {isSimpleMode ? 'Simple Mode ON' : 'Simple Mode OFF'}
+                    </button>
+                </motion.div>
+
                 {/* Dashboard Header */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left: Metadata & Summary */}
                     <Card className="lg:col-span-2 bg-slate-950/40 backdrop-blur-3xl border border-white/10 shadow-3xl overflow-hidden glass-effect rounded-[3rem]">
                         <CardHeader className="p-10 pb-4">
@@ -148,11 +181,11 @@ export function ReportProcessor() {
                             ))}
                         </div>
                     </Card>
-                </div>
+                </motion.div>
 
                 {/* Report Visualization Section */}
-                {report.imageBase64 && (
-                    <div className="rounded-[4rem] overflow-hidden border border-white/10 shadow-4xl bg-slate-950/50 p-4 group transition-all hover:scale-[1.01]">
+                {!isSimpleMode && report.imageBase64 && (
+                    <motion.div variants={itemVariants} className="rounded-[4rem] overflow-hidden border border-white/10 shadow-4xl bg-slate-950/50 p-4 group transition-all hover:scale-[1.01]">
                         <div className="absolute top-8 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
                             <Badge className="bg-blue-600/90 backdrop-blur-md text-white border-0 px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.4em] shadow-2xl">Interactive Laboratory Scan</Badge>
                         </div>
@@ -160,28 +193,30 @@ export function ReportProcessor() {
                             imageUrl={`data:${report.imageMimeType};base64,${report.imageBase64}`}
                             parameters={report.parameters}
                         />
-                    </div>
+                    </motion.div>
                 )}
 
                 {/* Parameters & Diet Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="space-y-8">
-                        <div className="flex items-center justify-between px-4">
-                            <h3 className="font-black text-white text-sm uppercase tracking-[0.4em]">{t('measuredParameters')}</h3>
-                            <div className="flex gap-2">
-                                <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                                <div className="w-2 h-2 rounded-full bg-yellow-500" />
-                                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <div className={`grid grid-cols-1 ${!isSimpleMode ? 'lg:grid-cols-2' : ''} gap-8`}>
+                    {!isSimpleMode && (
+                        <motion.div variants={itemVariants} className="space-y-8">
+                            <div className="flex items-center justify-between px-4">
+                                <h3 className="font-black text-white text-sm uppercase tracking-[0.4em]">{t('measuredParameters')}</h3>
+                                <div className="flex gap-2">
+                                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                                    <div className="w-2 h-2 rounded-full bg-yellow-500" />
+                                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="grid grid-cols-1 gap-6">
-                            {report.parameters.map((p, idx) => (
-                                <ParameterCard key={idx} parameter={p} index={idx} />
-                            ))}
-                        </div>
-                    </div>
+                            <div className="grid grid-cols-1 gap-6">
+                                {report.parameters.map((p, idx) => (
+                                    <ParameterCard key={idx} parameter={p} index={idx} />
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
 
-                    <div className="space-y-8">
+                    <motion.div variants={itemVariants} className="space-y-8">
                         <div className="px-4">
                             <h3 className="font-black text-white text-sm uppercase tracking-[0.4em]">Health Optimization</h3>
                         </div>
@@ -191,51 +226,66 @@ export function ReportProcessor() {
                         <div className="p-2 rounded-[3.5rem] bg-blue-500/5 border border-blue-500/10">
                             <CareLocator />
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
 
                 {/* Scientific References */}
                 {report.citations && report.citations.length > 0 && (
-                    <div className="space-y-8 pt-10 border-t border-white/5">
-                        <div className="flex items-center gap-4 px-4">
-                            <BookOpen className="w-6 h-6 text-blue-500" />
-                            <h3 className="font-black text-white text-sm uppercase tracking-[0.4em]">{t('scientificReferences')}</h3>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {report.citations.map((cite, idx) => (
-                                <a
-                                    key={idx}
-                                    href={cite.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="p-8 border border-white/10 rounded-[2.5rem] hover:bg-white/10 hover:border-blue-500/50 transition-all group bg-slate-950/50 shadow-2xl relative overflow-hidden"
-                                >
-                                    <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <ExternalLink className="w-5 h-5 text-blue-400" />
-                                    </div>
-                                    <div className="font-black text-blue-400 group-hover:text-blue-300 mb-3 text-sm leading-tight uppercase tracking-tight line-clamp-2">
-                                        {cite.title}
-                                    </div>
-                                    <p className="text-xs text-slate-500 group-hover:text-slate-400 line-clamp-3 leading-relaxed font-bold tracking-tight">{cite.description}</p>
-                                </a>
-                            ))}
-                        </div>
-                    </div>
+                    <motion.div variants={itemVariants} className="pt-10 border-t border-white/5">
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button variant="outline" className="w-full py-8 border-white/10 bg-slate-900/50 hover:bg-slate-800/80 rounded-[2rem] gap-4 transition-all">
+                                    <BookOpen className="w-5 h-5 text-blue-500" />
+                                    <span className="font-black text-white uppercase tracking-[0.4em] text-xs">Knowledge Base & Citations</span>
+                                    <span className="text-xs text-slate-400 font-bold ml-auto bg-slate-950 px-3 py-1 border border-white/5 rounded-full">{report.citations.length} References</span>
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent side="right" className="bg-slate-950/95 border-l border-white/10 backdrop-blur-3xl w-[90vw] sm:max-w-md overflow-y-auto z-[200]">
+                                <SheetHeader className="mb-8 mt-6">
+                                    <SheetTitle className="text-lg font-black text-white uppercase tracking-widest flex items-center gap-3">
+                                        <BookOpen className="w-5 h-5 text-blue-500" />
+                                        Medical Literature
+                                    </SheetTitle>
+                                </SheetHeader>
+                                <div className="space-y-4 pb-20">
+                                    {report.citations.map((cite, idx) => (
+                                        <a
+                                            key={idx}
+                                            href={cite.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block p-5 border border-white/10 rounded-[1.5rem] hover:bg-white/5 hover:border-blue-500/50 transition-all group bg-slate-900/50 shadow-xl relative overflow-hidden"
+                                        >
+                                            <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <ExternalLink className="w-4 h-4 text-blue-400" />
+                                            </div>
+                                            <div className="font-black text-blue-400 group-hover:text-blue-300 mb-2 text-xs leading-relaxed uppercase tracking-widest pr-6">
+                                                {cite.title}
+                                            </div>
+                                            <p className="text-xs text-slate-400 leading-relaxed font-bold tracking-wide">{cite.description}</p>
+                                        </a>
+                                    ))}
+                                </div>
+                            </SheetContent>
+                        </Sheet>
+                    </motion.div>
                 )}
 
                 {/* AI Copilot Chat */}
-                <div className="pt-10 border-t border-white/5">
+                <motion.div variants={itemVariants} className="pt-10 border-t border-white/5">
                     <ChatFlow report={report} />
-                </div>
+                </motion.div>
 
-                <Button
-                    onClick={() => setReport(null)}
-                    variant="ghost"
-                    className="w-full py-12 text-slate-500 hover:text-white hover:bg-white/5 rounded-[3rem] font-black uppercase tracking-[0.4em] text-xs border border-white/5 transition-all group active:scale-[0.98]"
-                >
-                    <span className="group-hover:tracking-[0.6em] transition-all">{t('clearResults')}</span>
-                </Button>
-            </div>
+                <motion.div variants={itemVariants}>
+                    <Button
+                        onClick={() => setReport(null)}
+                        variant="ghost"
+                        className="w-full py-12 text-slate-500 hover:text-white hover:bg-white/5 rounded-[3rem] font-black uppercase tracking-[0.4em] text-xs border border-white/5 transition-all group active:scale-[0.98]"
+                    >
+                        <span className="group-hover:tracking-[0.6em] transition-all">{t('clearResults')}</span>
+                    </Button>
+                </motion.div>
+            </motion.div>
         );
     }
 
